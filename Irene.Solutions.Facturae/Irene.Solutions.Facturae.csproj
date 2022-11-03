@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{64C8E50E-892A-40E1-A5E7-95742FD7AA41}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Irene.Solutions.Facturae</RootNamespace>
+    <AssemblyName>Irene.Solutions.Facturae</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Irene.Solutions.Facturae.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Src\Business\Invoices\BaseItem.cs" />
+    <Compile Include="Src\Business\Invoices\Base.cs" />
+    <Compile Include="Src\Business\Invoices\Invoice.cs" />
+    <Compile Include="Src\Business\Invoices\InvoiceAdministrativeCentre.cs" />
+    <Compile Include="Src\Business\Invoices\InvoiceItem.cs" />
+    <Compile Include="Src\Business\Invoices\InvoicePayment.cs" />
+    <Compile Include="Src\Business\Invoices\InvoiceTaxes.cs" />
+    <Compile Include="Src\Business\Invoices\InvoiceTaxesOutput.cs" />
+    <Compile Include="Src\Business\Invoices\InvoiceTaxesWithholding.cs" />
+    <Compile Include="Src\Business\Json\Serializer\IJsonSerializer.cs" />
+    <Compile Include="Src\Business\Json\Serializer\JsonDefaulSerializer.cs" />
+    <Compile Include="Src\Business\Json\Serializer\JsonDecimalSerializer.cs" />
+    <Compile Include="Src\Business\Json\JsonSerializable.cs" />
+    <Compile Include="Src\Business\Json\Serializer\JsonDateTimeSerializer.cs" />
+    <Compile Include="Src\Business\Json\Serializer\JsonIntSerializer.cs" />
+    <Compile Include="Src\Business\Json\Serializer\JsonStringSerializer.cs" />
+    <Compile Include="Src\Business\Json\Serializer\JsonSerializer.cs" />
+    <Compile Include="Src\Business\Net\IreneSolutionsRequest.cs" />
+    <Compile Include="Src\FacturaeManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
