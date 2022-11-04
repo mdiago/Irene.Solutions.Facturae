@@ -21,12 +21,12 @@ Una vez obtenida la ServiceKey, utilizaremos la misma para crear una instancia d
 var manager = new FacturaeManager("bWFudWVsQGlerrT8yZ.....");
 
 ```
-#### C#
+#### VB
 
 ```VB
 
-// Incluimos nuestra SeviceKey en el contructor
-var manager = new FacturaeManager("bWFudWVsQGlerrT8yZ.....");
+' Incluimos nuestra SeviceKey en el contructor
+Dim manager As New FacturaeManager("bWFudWVsQGlerrT8yZ.....")
 
 ```
 
