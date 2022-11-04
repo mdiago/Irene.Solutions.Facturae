@@ -183,8 +183,6 @@ Dim invoice As Invoice = New Invoice With
 ' Incluimos nuestra SeviceKey en el contructor
 Dim manager As New FacturaeManager("bWFudWVsQGlerrT8yZ.....")
 
-Dim manager As New FacturaeManager("bWFudWVsQGlyZW5lc29sdXRpb25zLmNvbTplbGVmYW50ZQ==")
-
 Dim facturaeXml = manager.Create(invoice)
 
 ```
