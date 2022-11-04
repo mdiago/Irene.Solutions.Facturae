@@ -174,6 +174,16 @@ namespace Irene.Solutions.Facturae.Business.Invoices
         public string BuyerCountryID { get; set; }
 
         /// <summary>
+        /// Teléfono del comprador.
+        /// </summary>        
+        public string BuyerTelephone { get; set; }
+
+        /// <summary>
+        /// Web sel comprador.
+        /// </summary>        
+        public string BuyerWebAddress { get; set; }
+
+        /// <summary>
         /// Mail del comprador.
         /// </summary>        
         public string BuyerElectronicMail { get; set; }

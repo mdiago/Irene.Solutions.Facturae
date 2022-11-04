@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Doc\NamespaceDoc.cs" />
     <Compile Include="Src\Business\Invoices\BaseItem.cs" />
     <Compile Include="Src\Business\Invoices\Base.cs" />
     <Compile Include="Src\Business\Invoices\Invoice.cs" />
@@ -64,6 +65,8 @@
     <Compile Include="Src\FacturaeManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Doc\Help\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

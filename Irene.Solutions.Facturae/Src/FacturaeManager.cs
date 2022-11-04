@@ -60,7 +60,7 @@ namespace Irene.Solutions.Facturae
         /// Key de acceso al API de Irene Solutions
         /// para facturae.
         /// </summary>
-        string _ServiceKey;
+        readonly string _ServiceKey;
 
         #endregion
 
@@ -88,7 +88,7 @@ namespace Irene.Solutions.Facturae
         /// <param name="response">Texto de la respuesta.</param>
         /// <param name="key">Clave del valor a recuperar.</param>
         /// <returns>Código de resultado.</returns>
-        public string GetResponseKeyValue(string response, string key) 
+        public static string GetResponseKeyValue(string response, string key) 
         {
 
             var pattern = "(?<=(\"|'){0,1}" + key + "(\"|'){0,1}" +
@@ -100,23 +100,27 @@ namespace Irene.Solutions.Facturae
         
         }
 
-        #endregion
-
-        #region Métodos Públicos de Instancia
-
         /// <summary>
-        /// Crea el texto xml facturae sin firmar a partir
-        /// de una instancia de Invoice.
+        /// Crea el texto xml facturae sin firmar por defecto
+        /// (con el parametro action como 'Get' por defecto)
+        /// o firmada si se pasa el parámetro action como 
+        /// 'GetSigned', a partir de una instancia de Invoice.
         /// </summary>
         /// <param name="invoice">Instancia de Invoice.</param>
-        /// <returns>facturae obtenido de la instancia de Invlice.</returns>
-        public string Create(Invoice invoice) 
+        /// <param name="action">
+        /// <para>'Get': facturae sin firmar.</para>
+        /// <para>'GetSigned': facturae firmada.</para>
+        /// </param>
+        /// <returns>Facturae obtenido de la instancia de Invoice.</returns>
+        /// <returns></returns>
+        private string Create(Invoice invoice, string action = "Get") 
         {
 
             invoice.ServiceKey = _ServiceKey;
             var json = $"{invoice}";
 
-            var request = new IreneSolutionsRequest("https://facturae.irenesolutions.com:8050/Kivu/Isolutions/Facturae/Facturae/Get");
+            var request = new IreneSolutionsRequest(
+                $"https://facturae.irenesolutions.com:8050/Kivu/Isolutions/Facturae/Facturae/{action}");
 
             var response = request.GetResponse(json);
 
@@ -130,6 +134,36 @@ namespace Irene.Solutions.Facturae
             var facturaeUTF8 = Convert.FromBase64String(facturaeBase64);
 
             return Encoding.UTF8.GetString(facturaeUTF8);
+
+        }
+
+        #endregion
+
+        #region Métodos Públicos de Instancia
+
+        /// <summary>
+        /// Crea el texto xml facturae sin firmar a partir
+        /// de una instancia de Invoice.
+        /// </summary>
+        /// <param name="invoice">Instancia de Invoice.</param>
+        /// <returns>Facturae obtenido de la instancia de Invoice.</returns>
+        public string Create(Invoice invoice) 
+        {
+
+            return Create(invoice, "Get");
+
+        }
+
+        /// <summary>
+        /// Crea el texto xml facturae firmada a partir
+        /// de una instancia de Invoice.
+        /// </summary>
+        /// <param name="invoice">Instancia de Invoice.</param>
+        /// <returns>Facturae obtenido de la instancia de Invoice.</returns>
+        public string CreateSigned(Invoice invoice)
+        {
+
+            return Create(invoice, "GetSigned");
 
         }
 
