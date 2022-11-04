@@ -30,3 +30,5 @@ Dim manager As New FacturaeManager("bWFudWVsQGlerrT8yZ.....")
 
 ```
 
+### Crear facturae sin firmar
+
