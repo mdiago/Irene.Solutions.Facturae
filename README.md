@@ -12,3 +12,13 @@ Bienvenido a la herramienta de Irene.Solutions.Facturae Gestiona con facilidad t
 
 Una vez obtenida la ServiceKey, utilizaremos la misma para crear una instancia de la clase FacturaeManager, que nos va a permitir generar nuestros documentos facturae, firmar los mismos y enviarlos.
 
+### Ejemplo de creación de una instancia de la clase FacturaeManager
+#### C#
+
+```C#
+
+// Incluimos nuestra SeviceKey en el contructor
+var manager = new FacturaeManager("bWFudWVsQGlerrT8yZ.....");
+
+```
+
