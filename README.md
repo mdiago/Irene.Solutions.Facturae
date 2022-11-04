@@ -1,4 +1,4 @@
-# Irene.Solutions.Facturae <img src='https://facturae.irenesolutions.com/img/logo-heart.png' style='width:90px'/>
+# Irene.Solutions.Facturae <img src='https://facturae.irenesolutions.com/img/logo-heart.png' style='width:90px;float: right;margin-top: -40px;'/>
 
 
 Irene.Solutions.Facturae la biblioteca .net para el trabajo con facturae y FACe creada por [Irene Solutions](http://www.irenesolutions.com) . La finalidad de esta herramienta es simplificar los trabajos de serialización xml, firma y envío de documentos facturae a FACe.
