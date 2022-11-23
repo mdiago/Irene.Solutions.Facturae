@@ -40,6 +40,7 @@
 using Irene.Solutions.Facturae.Business.Invoices;
 using Irene.Solutions.Facturae.Business.Net;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -61,6 +62,11 @@ namespace Irene.Solutions.Facturae
         /// para facturae.
         /// </summary>
         readonly string _ServiceKey;
+
+        /// <summary>
+        /// Punto de entrada API REST.
+        /// </summary>
+        readonly string _UrlRoot = "https://facturae.irenesolutions.com:8050/Kivu/";
 
         #endregion
 
@@ -91,7 +97,13 @@ namespace Irene.Solutions.Facturae
         public static string GetResponseKeyValue(string response, string key) 
         {
 
-            var pattern = "(?<=(\"|'){0,1}" + key + "(\"|'){0,1}" +
+            var pattern = "(\"|'){0,1}" + key + "(\"|'){0,1}" +
+                @"\s*:\s*" + "\"\"";
+
+            if (Regex.IsMatch(response, pattern)) // Valor es cadena vacía
+                return "";
+
+            pattern = "(?<=(\"|'){0,1}" + key + "(\"|'){0,1}" +
                 @"\s*:\s*"+ "\"*)[^\"]" + @"[\s\S]*?" + "(?=(\"|'){0,1}(}|,))";
 
             var value = Regex.Match(response, pattern).Value;            
@@ -120,7 +132,7 @@ namespace Irene.Solutions.Facturae
             var json = $"{invoice}";
 
             var request = new IreneSolutionsRequest(
-                $"https://facturae.irenesolutions.com:8050/Kivu/Isolutions/Facturae/Facturae/{action}");
+                $"{_UrlRoot}Isolutions/Facturae/Facturae/{action}");
 
             var response = request.GetResponse(json);
 
@@ -167,7 +179,76 @@ namespace Irene.Solutions.Facturae
 
         }
 
+        /// <summary>
+        /// Devuelve una lista con los centros administrativos
+        /// del organismo al que pertenece el NIF facilitado como
+        /// parmatro de entrada.
+        /// </summary>
+        /// <param name="taxID">NIF del organismo del cual se quieren
+        /// obtener los centros administrativos.</param>
+        /// <returns>Lista de centros administrativos encontrados
+        /// o null.</returns>
+        public List<InvoiceAdministrativeCentre> GetAdministrativeCentres(string taxID)
+        {
+
+            var json = $"{{\"ServiceKey\":\"{_ServiceKey}\",\"Offset\":0,\"Count\":1" +
+                $",\"OrderClause\":\"ORDER BY Created DESC\",\"Filters\":" +
+                $"[{{\"FieldName\":\"TaxID\",\"Operator\":\"LIKE\",\"Value\":\"'{taxID}'\"}}]}}";
+
+            var request = new IreneSolutionsRequest(
+                $"{_UrlRoot}Isolutions/Facturae/FaceRelations/GetFilteredList");
+
+            var response = request.GetResponse(json);
+
+            var resultCode = GetResponseKeyValue(response, "ResultCode");
+            var resultMessage = GetResponseKeyValue(response, "ResultMessage");
+
+            if (resultCode != "0")
+                throw new Exception(resultMessage);
+
+            var jsonItems = Regex.Match(response, @"(?<=" + "\"Items\":" + @"\[)[^\]]+");
+
+            if (jsonItems != null)
+            {
+
+                var result = new List<InvoiceAdministrativeCentre>();
+                var centreCode = GetResponseKeyValue(response, "AccountingOffice");
+
+                if (!string.IsNullOrEmpty(centreCode))
+                    result.Add(new InvoiceAdministrativeCentre()
+                    {
+                        CentreCode = centreCode,
+                        CentreDescription = "Oficina Contable"
+                    });
+
+                centreCode = GetResponseKeyValue(response, "ManagingOffice");
+
+                if (!string.IsNullOrEmpty(centreCode))
+                    result.Add(new InvoiceAdministrativeCentre()
+                    {
+                        CentreCode = centreCode,
+                        CentreDescription = "Organo Gestor"
+                    });
+
+                centreCode = GetResponseKeyValue(response, "Administration");
+
+                if (!string.IsNullOrEmpty(centreCode))
+                    result.Add(new InvoiceAdministrativeCentre()
+                    {
+                        CentreCode = centreCode,
+                        CentreDescription = "Unidad Tramitadora"
+                    });
+
+                return result;
+
+            }
+
+            return null;
+
+        }
+
         #endregion
 
     }
+
 }
