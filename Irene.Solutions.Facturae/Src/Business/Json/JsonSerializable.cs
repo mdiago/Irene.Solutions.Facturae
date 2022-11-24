@@ -39,7 +39,6 @@
 
 
 using Irene.Solutions.Facturae.Business.Json.Serializer;
-using System;
 using System.Collections;
 using System.Reflection;
 using System.Text;
@@ -53,17 +52,70 @@ namespace Irene.Solutions.Facturae.Business.Json
     public class JsonSerializable
     {
 
+        #region Métodos Privados de Instancia
+
+        /// <summary>
+        /// Añade fragmento json al StringBuilder de 
+        /// destino.
+        /// </summary>
+        /// <param name="stringBuilder">StringBuilder de 
+        /// destino.</param>
+        /// <param name="keyValueText">Fragmento json clave-valor.</param>
+        private void AppendTokenJson(StringBuilder stringBuilder, string keyValueText)
+        {
+
+            string json = (stringBuilder.Length == 0) ? "" : ",";
+            json += keyValueText;
+            stringBuilder.Append(json);
+
+        }
+
+        /// <summary>
+        /// Añade fragmento json al StringBuilder de 
+        /// destino.
+        /// </summary>
+        /// <param name="stringBuilder">StringBuilder de 
+        /// destino.</param>
+        /// <param name="pInf">Info de propiedad que contiene el valor
+        /// a serializar.</param>
+        /// <param name="value">Valor a serializar.</param>
+        private void AppendJson(StringBuilder stringBuilder, PropertyInfo pInf, object value)
+        {
+
+            if (typeof(JsonSerializable).IsAssignableFrom(pInf.PropertyType))
+            {
+
+                AppendTokenJson(stringBuilder, $"\"{pInf.Name}\"={{{this}}}");
+
+            }
+            else
+            {
+
+                var keyValueJson = new JsonSerializer(pInf, value).ToJson();
+
+                if (keyValueJson != null)
+                    AppendTokenJson(stringBuilder, new JsonSerializer(pInf, value).ToJson());
+
+            }
+
+        }
+
+        #endregion      
+
+        #region Métodos Públicos de Instancia
+
         /// <summary>
         /// Representación de la clase en formato
         /// JSON.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Representación de la clase en formato
+        /// JSON.</returns>
         public override string ToString()
         {
 
             var stringBuilder = new StringBuilder();
 
-            foreach (var pInf in GetType().GetProperties()) 
+            foreach (var pInf in GetType().GetProperties())
             {
 
                 var value = pInf.GetValue(this);
@@ -73,72 +125,41 @@ namespace Irene.Solutions.Facturae.Business.Json
 
                 var iList = value as IList;
 
-                if (iList == null) 
+                if (iList == null || pInf.PropertyType == typeof(byte[]))
                 {
 
                     AppendJson(stringBuilder, pInf, value);
                     continue;
 
-                } 
-                else 
+                }
+                else
                 {
 
                     string[] jsons = new string[iList.Count];
 
-                    for (int i = 0; i < iList.Count; i++) 
+                    for (int i = 0; i < iList.Count; i++)
                     {
 
                         var item = iList[i];
 
                         if (typeof(JsonSerializable).IsAssignableFrom(item.GetType()))
                             jsons[i] = $"{item}";
-                        else 
+                        else
                             jsons[i] = new JsonSerializer("", item).ToJson();
 
                     }
 
                     AppendTokenJson(stringBuilder, $"{pInf.Name}:[{string.Join(",", jsons)}]");
 
-                }               
-                    
+                }
+
             }
 
             return $"{{{stringBuilder.ToString()}}}";
 
         }
 
-        private void AppendTokenJson(StringBuilder stringBuilder, string keyValueText) 
-        {
-
-            string json = (stringBuilder.Length == 0) ? "" : ",";
-            json += keyValueText;
-            stringBuilder.Append(json);
-
-        }
-
-
-        private void AppendJson(StringBuilder stringBuilder, PropertyInfo pInf, object value) 
-        {
-
-            if (typeof(JsonSerializable).IsAssignableFrom(pInf.PropertyType))
-            {
-                
-                AppendTokenJson(stringBuilder, $"\"{pInf.Name}\"={{{this}}}");
-
-            }
-            else
-            {
-                
-                var keyValueJson = new JsonSerializer(pInf, value).ToJson();
-
-                if(keyValueJson != null)
-                    AppendTokenJson(stringBuilder, new JsonSerializer(pInf, value).ToJson());
-
-            }
-
-        }
-
-       
+        #endregion       
 
     }
 

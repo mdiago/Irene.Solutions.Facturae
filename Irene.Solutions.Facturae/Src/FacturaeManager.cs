@@ -37,6 +37,7 @@
     address: info@irenesolutions.com
  */
 
+using Irene.Solutions.Facturae.Business.Face;
 using Irene.Solutions.Facturae.Business.Invoices;
 using Irene.Solutions.Facturae.Business.Net;
 using System;
@@ -89,31 +90,6 @@ namespace Irene.Solutions.Facturae
         #region Métodos Privados de Instancia
 
         /// <summary>
-        /// Recupera el valor de una clave en
-        /// el resultado de la petición.
-        /// </summary>
-        /// <param name="response">Texto de la respuesta.</param>
-        /// <param name="key">Clave del valor a recuperar.</param>
-        /// <returns>Código de resultado.</returns>
-        public static string GetResponseKeyValue(string response, string key) 
-        {
-
-            var pattern = "(\"|'){0,1}" + key + "(\"|'){0,1}" +
-                @"\s*:\s*" + "\"\"";
-
-            if (Regex.IsMatch(response, pattern)) // Valor es cadena vacía
-                return "";
-
-            pattern = "(?<=(\"|'){0,1}" + key + "(\"|'){0,1}" +
-                @"\s*:\s*"+ "\"*)[^\"]" + @"[\s\S]*?" + "(?=(\"|'){0,1}(}|,))";
-
-            var value = Regex.Match(response, pattern).Value;            
-
-            return value;
-        
-        }
-
-        /// <summary>
         /// Crea el texto xml facturae sin firmar por defecto
         /// (con el parametro action como 'Get' por defecto)
         /// o firmada si se pasa el parámetro action como 
@@ -147,6 +123,35 @@ namespace Irene.Solutions.Facturae
             var facturaeUTF8 = Convert.FromBase64String(facturaeBase64);
 
             return Encoding.UTF8.GetString(facturaeUTF8);
+
+        }
+
+        #endregion
+
+        #region Métodos Públicos Estáticos
+
+        /// <summary>
+        /// Recupera el valor de una clave en
+        /// el resultado de la petición.
+        /// </summary>
+        /// <param name="response">Texto de la respuesta.</param>
+        /// <param name="key">Clave del valor a recuperar.</param>
+        /// <returns>Código de resultado.</returns>
+        public static string GetResponseKeyValue(string response, string key)
+        {
+
+            var pattern = "(\"|'){0,1}" + key + "(\"|'){0,1}" +
+                @"\s*:\s*" + "\"\"";
+
+            if (Regex.IsMatch(response, pattern)) // Valor es cadena vacía
+                return "";
+
+            pattern = "(?<=(\"|'){0,1}" + key + "(\"|'){0,1}" +
+                @"\s*:\s*" + "\"*)[^\"]" + @"[\s\S]*?" + "(?=(\"|'){0,1}(}|,))";
+
+            var value = Regex.Match(response, pattern).Value;
+
+            return value;
 
         }
 
@@ -245,6 +250,34 @@ namespace Irene.Solutions.Facturae
             }
 
             return null;
+
+        }
+
+        /// <summary>
+        /// Envía una factura a FACe.
+        /// </summary>
+        /// <param name="face">Objeto Face a enviar.</param>
+        /// <returns>Texto respuesta FACe.</returns>
+        public string SendFace(Face face)
+        {
+
+            face.ServiceKey = _ServiceKey;
+            var json = $"{face}";
+
+            var request = new IreneSolutionsRequest(
+                $"{_UrlRoot}Isolutions/Facturae/FaceFacturae/Send");
+
+            var response = request.GetResponse(json);
+
+            var resultCode = GetResponseKeyValue(response, "ResultCode");
+            var resultMessage = GetResponseKeyValue(response, "ResultMessage");
+
+            if (resultCode != "0")
+                throw new Exception(resultMessage);
+
+            var responseFACE = GetResponseKeyValue(response, "Return");
+
+            return responseFACE;
 
         }
 

@@ -44,6 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Doc\NamespaceDoc.cs" />
+    <Compile Include="Src\Business\Face\Face.cs" />
+    <Compile Include="Src\Business\Face\FaceAttachment.cs" />
     <Compile Include="Src\Business\Invoices\BaseItem.cs" />
     <Compile Include="Src\Business\Invoices\Base.cs" />
     <Compile Include="Src\Business\Invoices\Invoice.cs" />
@@ -58,6 +60,7 @@
     <Compile Include="Src\Business\Json\Serializer\JsonDecimalSerializer.cs" />
     <Compile Include="Src\Business\Json\JsonSerializable.cs" />
     <Compile Include="Src\Business\Json\Serializer\JsonDateTimeSerializer.cs" />
+    <Compile Include="Src\Business\Json\Serializer\JsonByteArraySerializer.cs" />
     <Compile Include="Src\Business\Json\Serializer\JsonIntSerializer.cs" />
     <Compile Include="Src\Business\Json\Serializer\JsonStringSerializer.cs" />
     <Compile Include="Src\Business\Json\Serializer\JsonSerializer.cs" />

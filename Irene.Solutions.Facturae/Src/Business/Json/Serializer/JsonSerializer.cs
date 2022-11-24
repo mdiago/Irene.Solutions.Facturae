@@ -50,22 +50,12 @@ namespace Irene.Solutions.Facturae.Business.Json.Serializer
     internal class JsonSerializer
     {
 
-        /// <summary>
-        /// Serializador para los parámetros facilitados
-        /// en el constructor.
-        /// </summary>
-        IJsonSerializer _Serializer;
-
-        PropertyInfo _PInf;
-
-        string _PName;
-
-        object _Value;
+        #region Variables Privadas Estáticas
 
         /// <summary>
         /// Diccionario de serializadores para tipos primitivos.
         /// </summary>
-        Dictionary<Type, IJsonSerializer> _SerializersByType = new Dictionary<Type, IJsonSerializer>() 
+        static readonly Dictionary<Type, IJsonSerializer> _SerializersByType = new Dictionary<Type, IJsonSerializer>()
         {
             {typeof(int),       new JsonIntSerializer() },
             {typeof(long),      new JsonIntSerializer() },
@@ -75,20 +65,51 @@ namespace Irene.Solutions.Facturae.Business.Json.Serializer
             {typeof(string),    new JsonStringSerializer() },
             {typeof(DateTime),  new JsonDateTimeSerializer() },
             {typeof(DateTime?), new JsonDateTimeSerializer() },
-
+            {typeof(byte[]),    new JsonByteArraySerializer() },
         };
+
+        #endregion
+
+        #region Variables Privadas de Instancia
+
+        /// <summary>
+        /// Serializador para los parámetros facilitados
+        /// en el constructor.
+        /// </summary>
+        IJsonSerializer _Serializer;
+
+        /// <summary>
+        /// Info de a propiedad a serializar.
+        /// </summary>
+        PropertyInfo _PInf;
+
+        /// <summary>
+        /// Nombre de la propiedad a serializar
+        /// </summary>
+        string _PName;
+
+        object _Value;
+
+
+        #endregion
+
+        #region Propiedades Privadas de Instacia
 
         /// <summary>
         /// Clave del valor para la serialización.
         /// </summary>
         internal string Key => string.IsNullOrEmpty(_PName) ? $"\"{_PInf?.Name}\"" : $"\"{_PName}\"";
 
+        #endregion
+
+        #region Construtores de Instancia
+
         /// <summary>
         /// Construye una nueva instancia de serializador de tipo.
         /// </summary>
         /// <param name="pInf">Info de la propiedad.</param>
         /// <param name="value">Valor a serializar.</param>
-        internal JsonSerializer(PropertyInfo pInf, object value) 
+        internal JsonSerializer(PropertyInfo pInf, object value)
         {
 
             _PInf = pInf;
@@ -121,6 +142,10 @@ namespace Irene.Solutions.Facturae.Business.Json.Serializer
 
         }
 
+        #endregion
+
+        #region Métodos Públicos de Instancia
+
         /// <summary>
         /// Devuelve la representación en JSON
         /// de la propiedad facilitada para la
@@ -130,7 +155,7 @@ namespace Irene.Solutions.Facturae.Business.Json.Serializer
         public string ToJson()
         {
 
-            if(_PInf == null && string.IsNullOrEmpty(_PName))
+            if (_PInf == null && string.IsNullOrEmpty(_PName))
                 return $"{_Serializer.ToJson(_Value)}";
 
             var type = _Value.GetType();
@@ -144,9 +169,12 @@ namespace Irene.Solutions.Facturae.Business.Json.Serializer
                     return null;
             }
 
-            return $"{Key}:{_Serializer.ToJson(_Value)}"; 
+            return $"{Key}:{_Serializer.ToJson(_Value)}";
 
         }
 
+        #endregion
+
     }
+
 }

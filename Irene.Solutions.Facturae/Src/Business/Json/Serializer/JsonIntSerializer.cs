@@ -43,10 +43,12 @@ namespace Irene.Solutions.Facturae.Business.Json.Serializer
 {
 
     /// <summary>
-    /// Serializador para cadenas.
+    /// Serializador para enteros.
     /// </summary>
     internal class JsonIntSerializer : IJsonSerializer
     {
+
+        #region Métodos Públicos de Instancia
 
         /// <summary>
         /// Devuelve la representación en JSON
@@ -55,7 +57,7 @@ namespace Irene.Solutions.Facturae.Business.Json.Serializer
         /// </summary>
         /// <param name="value">Valor a serializar.</param>
         /// <returns>Representación JSON de la propiedad.</returns>
-        public string ToJson(object value) 
+        public string ToJson(object value)
         {
 
             var l = Convert.ToInt64(value);
@@ -63,6 +65,8 @@ namespace Irene.Solutions.Facturae.Business.Json.Serializer
             return $"{l}";
 
         }
+
+        #endregion
 
     }
 }

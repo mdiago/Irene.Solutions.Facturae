@@ -46,6 +46,8 @@ namespace Irene.Solutions.Facturae.Business.Json.Serializer
     internal interface IJsonSerializer
     {
 
+        #region Métodos Públicos de Instancia
+
         /// <summary>
         /// Devuelve la representación en JSON
         /// de la propiedad facilitada para la
@@ -54,6 +56,8 @@ namespace Irene.Solutions.Facturae.Business.Json.Serializer
         /// <param name="value">Valor a serializar.</param>
         /// <returns>Representación JSON de la propiedad.</returns>
         string ToJson(object value);
+
+        #endregion
 
     }
 }

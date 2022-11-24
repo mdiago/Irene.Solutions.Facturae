@@ -37,29 +37,46 @@
     address: info@irenesolutions.com
  */
 
-namespace Irene.Solutions.Facturae.Business.Json.Serializer
+namespace Irene.Solutions.Facturae.Business.Face
 {
 
     /// <summary>
-    /// Serializador para cadenas.
+    /// Representa un archivo adjunto a un envío de
+    /// facturae a FACe. Generalmente los organismos
+    /// públicos solicitan documentos adicionales para
+    /// conformar la factura (presupuestos, informes...).
     /// </summary>
-    internal class JsonDefaulSerializer : IJsonSerializer
+    public class FaceAttachment
     {
+
+        #region Propiedades Públicas de Instancia
+
+        /// <summary>
+        /// Nombre del archivo.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Datos binarios del archivo.
+        /// </summary>
+        public byte[] Bytes { get; set; }
+
+        /// <summary>
+        /// Tipo mime del archivo.
+        /// </summary>
+        public string MimeType { get; set; }
+
+        #endregion
 
         #region Métodos Públicos de Instancia
 
         /// <summary>
-        /// Devuelve la representación en JSON
-        /// de la propiedad facilitada para la
-        /// instancia facilitada.
+        /// Representación textual de la instancia.
         /// </summary>
-        /// <param name="value">Valor a serializar.</param>
-        /// <returns>Representación JSON de la propiedad.</returns>
-        public string ToJson(object value)
+        /// <returns>Representación textual de la instancia.</returns>
+        public override string ToString()
         {
-
-            return $"{value}";
-
+            return $"{Name} ({MimeType})";
         }
 
         #endregion

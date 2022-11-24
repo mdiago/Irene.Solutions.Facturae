@@ -37,13 +37,15 @@
     address: info@irenesolutions.com
  */
 
+using System;
+
 namespace Irene.Solutions.Facturae.Business.Json.Serializer
 {
 
     /// <summary>
-    /// Serializador para cadenas.
+    /// Serializador para arrays de bytes.
     /// </summary>
-    internal class JsonDefaulSerializer : IJsonSerializer
+    internal class JsonByteArraySerializer : IJsonSerializer
     {
 
         #region Métodos Públicos de Instancia
@@ -58,7 +60,14 @@ namespace Irene.Solutions.Facturae.Business.Json.Serializer
         public string ToJson(object value)
         {
 
-            return $"{value}";
+            var bytes = value as byte[];
+
+            if (bytes == null)
+                return "null";
+
+            var b = Convert.ToBase64String(bytes);
+
+            return $"\"{b}\"";
 
         }
 
